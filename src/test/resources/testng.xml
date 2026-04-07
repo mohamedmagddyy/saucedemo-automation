@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="SauceDemo Automation Suite" parallel="false" thread-count="1">
+
+    <!-- Test Listener Configuration -->
+    <listeners>
+        <listener class-name="org.example.test.listeners.TestListener"/>
+    </listeners>
+
+    <!-- Login Test Group -->
+    <test name="Login Tests" preserve-order="true">
+        <classes>
+            <class name="org.example.test.tests.LoginTest">
+                <methods>
+                    <include name="testValidLogin"/>
+                    <include name="testInvalidLogin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- FIXED - Add CartTest -->
+    <test name="Cart Tests" preserve-order="true">
+        <classes>
+            <class name="org.example.test.tests.CartTest">
+                <methods>
+                    <include name="testAddProductToCart"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- FIXED - Add ProductsTest -->
+    <test name="Products Tests" preserve-order="true">
+        <classes>
+            <class name="org.example.test.tests.ProductsTest">
+                <methods>
+                    <include name="testAddToCartButtonChangesAndPersists"/>
+                    <include name="testDefaultSortingAToZ"/>
+                    <include name="testSortingZToA"/>
+                    <include name="testSortingPriceLowToHigh"/>
+                    <include name="testSortingPriceHighToLow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <!-- Checkout Test Group -->
+    <test name="Checkout Tests" preserve-order="true">
+        <classes>
+            <class name="org.example.test.tests.CheckoutTest">
+                <methods>
+                    <include name="testCheckoutFlow"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
