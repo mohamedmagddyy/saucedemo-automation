@@ -50,6 +50,7 @@ public class CartPage extends BasePage {
     }
 
 
+
     public String getCHECKOUTTitle() {
         return getText(CHECKOUT_TITLE);
     }
