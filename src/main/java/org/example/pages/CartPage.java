@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.example.base.BasePage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
  * CartPage class - Page Object for the Shopping Cart page
  */
 public class CartPage extends BasePage {
+
+    private static final Logger logger = LogManager.getLogger(CartPage.class);
 
     // ===== Locators =====
 
@@ -95,6 +99,7 @@ public class CartPage extends BasePage {
     }
 
     public void removeItem(String productName) {
+        logger.info("Removing item from cart: {}", productName);
         List<WebElement> items = driver.findElements(CART_ITEMS);
         for (WebElement item : items) {
             String name = item.findElement(ITEM_NAME).getText();

@@ -1,5 +1,6 @@
 package org.example.test.tests;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import org.example.test.base.BaseTest;
@@ -9,6 +10,23 @@ import org.example.pages.CartPage;
 
 public class CartTest extends BaseTest {
 
+    // FIXED - Class-level fields for page objects
+    private ProductsPage productsPage;
+    private CartPage cartPage;
+
+    // FIXED - @BeforeMethod for login and page object initialization
+    @BeforeMethod
+    @Override
+    public void setUp() {
+        super.setUp();
+        // FIXED - Login with valid credentials
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("standard_user", "secret_sauce");
+        // FIXED - Initialize page objects
+        productsPage = new ProductsPage(driver);
+        cartPage = new CartPage(driver);
+    }
+
     @Test(description = "Verify adding product to cart and validating cart details")
     public void testAddProductToCart() {
 
@@ -17,16 +35,8 @@ public class CartTest extends BaseTest {
         String expectedName = "Sauce Labs Backpack";
         String expectedPrice = "$29.99";
 
-        // ===== Login =====
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("standard_user", "secret_sauce");
-
-        // ===== Products =====
-        ProductsPage productsPage = new ProductsPage(driver);
-        productsPage.addToCart(expectedName); // ✅ الصح
-
-        // ===== Cart Page (نستخدمه للـ badge + click) =====
-        CartPage cartPage = new CartPage(driver);
+        // FIXED - Only test logic, no login needed
+        productsPage.addToCart(expectedName);
 
         // Validate badge
         soft.assertEquals(cartPage.getCartBadgeCount(), 1,

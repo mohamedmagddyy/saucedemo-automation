@@ -9,6 +9,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.time.Duration;
+import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * DriverFactory class - Responsible for initializing and managing WebDriver instances
@@ -17,12 +20,15 @@ import java.time.Duration;
 public class DriverFactory {
 
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static final Logger logger = LogManager.getLogger(DriverFactory.class);
 
     public static void initializeDriver(String browserType) {
 
         if (driver.get() != null) {
             return; // already initialized
         }
+
+        logger.info("Initializing {} browser", browserType);
 
         WebDriver localDriver;
 
@@ -33,6 +39,16 @@ public class DriverFactory {
 
                 ChromeOptions chromeOptions = new ChromeOptions();
                 chromeOptions.addArguments("--start-maximized");
+                chromeOptions.addArguments("--disable-save-password-bubble");
+                chromeOptions.addArguments("--disable-features=PasswordLeakDetection");
+                chromeOptions.setExperimentalOption("prefs", Map.of(
+                    "credentials_enable_service", false,
+                    "profile.password_manager_enabled", false,
+                    "profile.password_manager_leak_detection", false
+                ));
+
+                // Add this line to disable the automation controlled flag
+                chromeOptions.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
 
                 localDriver = new ChromeDriver(chromeOptions);
                 break;
@@ -48,6 +64,7 @@ public class DriverFactory {
                 break;
 
             default:
+                logger.error("Browser not supported: {}", browserType);
                 throw new RuntimeException("Browser not supported: " + browserType);
         }
 
@@ -55,6 +72,7 @@ public class DriverFactory {
         localDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         driver.set(localDriver);
+        logger.info("Driver initialized successfully");
     }
 
     public static WebDriver getDriver() {
@@ -71,6 +89,7 @@ public class DriverFactory {
         if (driver.get() != null) {
             driver.get().quit();
             driver.remove();
+            logger.info("Driver quit successfully");
         }
     }
 }

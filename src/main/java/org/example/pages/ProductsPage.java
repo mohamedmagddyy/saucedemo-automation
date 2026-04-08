@@ -5,6 +5,8 @@ import org.example.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 public class ProductsPage extends BasePage {
 
     private WaitUtils waitUtils;
+    private static final Logger logger = LogManager.getLogger(ProductsPage.class);
 
     // Page locators
     private static final By PRODUCTS_TITLE = By.cssSelector("span.title");
@@ -49,6 +52,7 @@ public class ProductsPage extends BasePage {
 
     /** Add product to cart */
     public void addToCart(String productName) {
+        logger.info("Adding product to cart: {}", productName);
         List<WebElement> items = waitUtils.waitForAllElementsToBeVisible(PRODUCT_ITEMS);
         for (WebElement item : items) {
             String name = item.findElement(PRODUCT_NAME).getText();
@@ -65,10 +69,12 @@ public class ProductsPage extends BasePage {
         for (WebElement item : items) {
             String name = item.findElement(PRODUCT_NAME).getText();
             if (name.equalsIgnoreCase(productName)) {
-
-                // ✅ wait جوه العنصر نفسه (مش global)
-                WebElement removeBtn = waitUtils.waitForNestedElementToBeVisible(item, REMOVE_BUTTON);
-                return removeBtn.isDisplayed();
+                try {
+                    WebElement btn = item.findElement(By.cssSelector("button[data-test^='remove']"));
+                    return btn.isDisplayed();
+                } catch (Exception e) {
+                    return false;
+                }
             }
         }
         return false;
@@ -76,6 +82,7 @@ public class ProductsPage extends BasePage {
 
     /** Go to product details page */
     public void goToProductDetails(String productName) {
+        logger.info("Navigating to product details: {}", productName);
         List<WebElement> items = waitUtils.waitForAllElementsToBeVisible(PRODUCT_ITEMS);
         for (WebElement item : items) {
             String name = item.findElement(PRODUCT_NAME).getText();
@@ -93,6 +100,7 @@ public class ProductsPage extends BasePage {
 
     /** Sort products */
     public void sortProducts(String value) {
+        logger.info("Sorting products by: {}", value);
         WebElement dropdown = waitUtils.waitForElementToBeClickable(SORT_DROPDOWN);
         dropdown.click();
         dropdown.findElement(By.cssSelector("option[value='" + value + "']")).click();
@@ -106,6 +114,17 @@ public class ProductsPage extends BasePage {
     /** Get list of product prices after sorting */
     public List<Double> getProductPrices() {
         return new ArrayList<>(getAllProductsWithPrice().values());
+    }
+
+    public boolean isRemoveButtonVisibleOnDetailsPage() {
+        try {
+            WebElement btn = waitUtils.waitForElementToBeVisible(
+                    By.cssSelector("button[data-test^='remove']")
+            );
+            return btn.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

@@ -3,6 +3,8 @@ package org.example.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.By;
 import org.example.base.BasePage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * LoginPage class - Page Object for the Login page
@@ -16,6 +18,7 @@ public class LoginPage extends BasePage {
     private static final By LOGIN_BUTTON = By.id("login-button");
     private static final By ERROR_MESSAGE = By.cssSelector("h3[data-test='error']");
 
+    private static final Logger logger = LogManager.getLogger(LoginPage.class);
 
     /**
      * Constructor - Initialize WebDriver for LoginPage
@@ -53,7 +56,9 @@ public class LoginPage extends BasePage {
     public String getErrorMessage() {
         // بترجع نص الرسالة لو موجودة
         if (isElementDisplayed(ERROR_MESSAGE)) {
-            return findElement(ERROR_MESSAGE).getText();
+            String errorMessage = findElement(ERROR_MESSAGE).getText();
+            logger.info("Error message found: {}", errorMessage);
+            return errorMessage;
         } else {
             return ""; // لو مش موجودة
         }
@@ -63,6 +68,7 @@ public class LoginPage extends BasePage {
      * Perform login flow
      */
     public void login(String username, String password) {
+        logger.info("Attempting login with username: {}", username);
         enterUsername(username);
         enterPassword(password);
         clickLogin();
