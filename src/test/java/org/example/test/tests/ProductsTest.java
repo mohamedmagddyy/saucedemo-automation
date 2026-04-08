@@ -1,5 +1,6 @@
 package org.example.test.tests;
 
+import io.qameta.allure.*;
 import org.example.pages.LoginPage;
 import org.example.pages.ProductsPage;
 import org.example.test.base.BaseTest;
@@ -11,6 +12,8 @@ import org.testng.annotations.Test;
 
 import java.util.*;
 
+@Epic("SauceDemo E2E Tests")
+@Feature("Products")
 public class ProductsTest extends BaseTest {
 
     // FIXED - Class-level field for ProductsPage
@@ -36,6 +39,10 @@ public class ProductsTest extends BaseTest {
     }
 
     @Test(description = "Verify Add to Cart button changes to Remove and persists in product details page")
+    @Story("Add to Cart")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("After adding a product to the cart the 'Add to Cart' button must change to 'Remove'. " +
+                 "Navigating to the product detail page should preserve the Remove button state.")
     public void testAddToCartButtonChangesAndPersists() {
 
         // FIXED - Only test logic, no login needed
@@ -72,6 +79,9 @@ public class ProductsTest extends BaseTest {
 //     ================= Sorting Tests =================
 
     @Test(description = "Verify default sorting is A to Z")
+    @Story("Product Sorting")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that the default product listing is sorted alphabetically from A to Z.")
     public void testDefaultSortingAToZ() {
 
         List<String> names = productsPage.getProductNames();
@@ -83,6 +93,9 @@ public class ProductsTest extends BaseTest {
     }
 
     @Test(description = "Verify sorting Z to A")
+    @Story("Product Sorting")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that selecting the 'Z to A' sort option reorders the product list in descending alphabetical order.")
     public void testSortingZToA() {
 
         productsPage.sortProducts("za");
@@ -96,6 +109,9 @@ public class ProductsTest extends BaseTest {
     }
 
     @Test(description = "Verify sorting Price Low to High")
+    @Story("Product Sorting")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that selecting the 'Price (low to high)' sort option orders products by price ascending.")
     public void testSortingPriceLowToHigh() {
 
         productsPage.sortProducts("lohi");
@@ -109,6 +125,9 @@ public class ProductsTest extends BaseTest {
     }
 
     @Test(description = "Verify sorting Price High to Low")
+    @Story("Product Sorting")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that selecting the 'Price (high to low)' sort option orders products by price descending.")
     public void testSortingPriceHighToLow() {
 
         productsPage.sortProducts("hilo");

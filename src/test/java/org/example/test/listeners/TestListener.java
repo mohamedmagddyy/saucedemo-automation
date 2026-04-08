@@ -1,15 +1,22 @@
 package org.example.test.listeners;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.Attachment;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.ITestContext;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.OutputType;
 import org.example.driver.DriverFactory;
 import org.example.utils.ScreenshotUtils;
 
+import java.io.ByteArrayInputStream;
+
 /**
- * TestListener class - Implements TestNG ITestListener for test execution events
- * Captures screenshots on test failure and logs test execution details
+ * TestListener class - Implements TestNG ITestListener for test execution events.
+ * Captures screenshots on test failure, attaches them to Allure report,
+ * and logs test execution details to the console.
  */
 public class TestListener implements ITestListener {
 
@@ -30,9 +37,13 @@ public class TestListener implements ITestListener {
         String testName = result.getMethod().getMethodName();
         WebDriver driver = DriverFactory.getDriver();
 
+        // --- Save screenshot to disk (existing behaviour) ---
         String screenshotPath = ScreenshotUtils.takeScreenshot(driver, testName);
         System.out.println("❌ Test Failed: " + testName);
         System.out.println("📸 Screenshot saved at: " + screenshotPath);
+
+        // --- Attach screenshot to Allure report ---
+        attachScreenshotToAllure(driver, testName);
 
         Throwable throwable = result.getThrowable();
         if (throwable != null) {
@@ -65,5 +76,31 @@ public class TestListener implements ITestListener {
         System.out.println("Summary: Passed=" + context.getPassedTests().size()
                 + ", Failed=" + context.getFailedTests().size()
                 + ", Skipped=" + context.getSkippedTests().size());
+    }
+
+    // -------------------------------------------------------------------------
+    // Private helper — takes screenshot bytes from the driver and feeds them
+    // directly to Allure so the report embeds the image inline.
+    // -------------------------------------------------------------------------
+
+    /**
+     * Captures a PNG screenshot from the current driver session and attaches
+     * it to the active Allure step/test as an inline image.
+     *
+     * @param driver   the active WebDriver instance
+     * @param testName test method name — used as the attachment label
+     */
+    private void attachScreenshotToAllure(WebDriver driver, String testName) {
+        try {
+            byte[] screenshotBytes = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            Allure.addAttachment(
+                    "Screenshot on Failure — " + testName,
+                    "image/png",
+                    new ByteArrayInputStream(screenshotBytes),
+                    "png"
+            );
+        } catch (Exception e) {
+            System.out.println("⚠ Could not attach screenshot to Allure: " + e.getMessage());
+        }
     }
 }

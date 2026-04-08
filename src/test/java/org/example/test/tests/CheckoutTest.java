@@ -1,5 +1,6 @@
 package org.example.test.tests;
 
+import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -7,6 +8,8 @@ import org.testng.asserts.SoftAssert;
 import org.example.test.base.BaseTest;
 import org.example.pages.*;
 
+@Epic("SauceDemo E2E Tests")
+@Feature("Checkout")
 public class CheckoutTest extends BaseTest {
 
     // FIXED - Class-level fields for page objects
@@ -29,6 +32,10 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify complete checkout flow")
+    @Story("Complete Order")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Add a product to cart, proceed through the full checkout flow (cart → info → overview → finish) " +
+                 "and verify the success confirmation message.")
     public void testCheckoutFlow() {
 
         SoftAssert soft = new SoftAssert();
@@ -65,6 +72,9 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify error when all fields is empty")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that submitting the checkout info step with all fields empty shows the 'First Name is required' error.")
     public void testEmptyallfields() {
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.clickCartIcon();
@@ -79,9 +89,10 @@ public class CheckoutTest extends BaseTest {
         );
     }
 
-
-
     @Test(description = "Verify error when First Name is empty")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that leaving the First Name field empty while the rest are filled shows the correct error.")
     public void testEmptyFirstName() {
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.clickCartIcon();
@@ -97,6 +108,9 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify error when Last Name is empty")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that leaving the Last Name field empty while the rest are filled shows the correct error.")
     public void testEmptyLastName() {
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.clickCartIcon();
@@ -112,6 +126,9 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify error when Zip Code is empty")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that leaving the Postal Code field empty while the rest are filled shows the correct error.")
     public void testEmptyZipCode() {
         productsPage.addToCart("Sauce Labs Backpack");
         cartPage.clickCartIcon();
@@ -127,6 +144,10 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify overview page title, item count, and subtotal calculation")
+    @Story("Order Summary Validation")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Add two products, proceed to checkout overview, and verify the page title, item count, " +
+                 "subtotal, and total (subtotal + 8% tax) match expected values.")
     public void testCheckoutOverviewDetails() {
 
         SoftAssert soft = new SoftAssert();
@@ -197,6 +218,9 @@ public class CheckoutTest extends BaseTest {
     }
 
     @Test(description = "Verify cart badge is empty after completing order and going back home")
+    @Story("Post-Order State")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Complete a full checkout and verify that after clicking 'Back Home' the cart badge count resets to 0.")
     public void testCartEmptyAfterCheckout() {
 
         // Add product and complete full checkout flow
@@ -217,6 +241,4 @@ public class CheckoutTest extends BaseTest {
                 "[ASSERTION] Cart badge should be 0 after completing order"
         );
     }
-
-
 }

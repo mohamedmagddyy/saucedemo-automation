@@ -1,5 +1,6 @@
 package org.example.test.tests;
 
+import io.qameta.allure.*;
 import org.example.pages.ProductsPage;
 import org.testng.annotations.Test;
 import org.testng.Assert;
@@ -7,9 +8,14 @@ import org.example.test.base.BaseTest;
 import org.example.pages.LoginPage;
 import org.example.utils.ConfigReader;
 
+@Epic("SauceDemo E2E Tests")
+@Feature("Authentication")
 public class LoginTest extends BaseTest {
 
     @Test(description = "Login with valid credentials")
+    @Story("Valid Login")
+    @Severity(SeverityLevel.BLOCKER)
+    @Description("Verify that a standard user can log in with valid credentials and is redirected to the Products page.")
     public void testValidLogin() {
         LoginPage loginPage = new LoginPage(driver);
         ProductsPage productsPage = new ProductsPage(driver);
@@ -28,6 +34,9 @@ public class LoginTest extends BaseTest {
     }
 
     @Test(description = "Login with invalid credentials")
+    @Story("Invalid Login")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Verify that an error message is displayed when logging in with invalid credentials.")
     public void testInvalidLogin() {
         LoginPage loginPage = new LoginPage(driver);
 
@@ -41,9 +50,12 @@ public class LoginTest extends BaseTest {
         String errorMessage = loginPage.getErrorMessage();
         // FIXED
         Assert.assertFalse(errorMessage.isEmpty(), "Error message should not be empty");
-
     }
+
     @Test(description = "Login with both fields empty")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that submitting the login form with both fields empty shows the correct error message.")
     public void testEmptyUsernameAndPassword() {
         LoginPage loginPage = new LoginPage(driver);
 
@@ -56,6 +68,9 @@ public class LoginTest extends BaseTest {
     }
 
     @Test(description = "Login with empty username")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that submitting the login form with an empty username shows the correct error message.")
     public void testEmptyUsername() {
         LoginPage loginPage = new LoginPage(driver);
 
@@ -68,6 +83,9 @@ public class LoginTest extends BaseTest {
     }
 
     @Test(description = "Login with empty password")
+    @Story("Form Validation")
+    @Severity(SeverityLevel.NORMAL)
+    @Description("Verify that submitting the login form with an empty password shows the correct error message.")
     public void testEmptyPassword() {
         LoginPage loginPage = new LoginPage(driver);
 

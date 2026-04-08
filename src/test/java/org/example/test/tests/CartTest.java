@@ -1,5 +1,6 @@
 package org.example.test.tests;
 
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -8,6 +9,8 @@ import org.example.pages.LoginPage;
 import org.example.pages.ProductsPage;
 import org.example.pages.CartPage;
 
+@Epic("SauceDemo E2E Tests")
+@Feature("Shopping Cart")
 public class CartTest extends BaseTest {
 
     // FIXED - Class-level fields for page objects
@@ -28,6 +31,10 @@ public class CartTest extends BaseTest {
     }
 
     @Test(description = "Verify adding product to cart and validating cart details")
+    @Story("Add Product to Cart")
+    @Severity(SeverityLevel.CRITICAL)
+    @Description("Add 'Sauce Labs Backpack' to the cart, verify the badge count, open the cart, " +
+                 "and assert that the product name and price are correct.")
     public void testAddProductToCart() {
 
         SoftAssert soft = new SoftAssert();
