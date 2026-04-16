@@ -126,4 +126,11 @@ saucedemo-automation/
 - `testCheckoutOverviewDetails()` - Order summary validation with price calculations
 - `testCartEmptyAfterCheckout()` - Post-order state verification
 
+## Allure Report
+
+### Dashboard
+![Allure graph](screenshots/allure/Allure-Report-graph.png)
+![Allure overview](screenshots/allure/Allure-Report-overview.png)
+![Allure suites](screenshots/allure/Allure-Report-suites.png)
+
 
