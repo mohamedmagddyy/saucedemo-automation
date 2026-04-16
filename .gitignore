@@ -24,12 +24,6 @@ allure/
 logs/
 *.log
 
-# ========================
-# Screenshots
-# ========================
-screenshots/
-*.png
-*.jpg
 
 # ========================
 # IntelliJ IDEA
