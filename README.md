@@ -1,214 +1,129 @@
-# SauceDemo Automation Framework
+# SauceDemo Test Automation Framework
 
-A clean, scalable, and professional Java Selenium Test Automation Framework using TestNG and Page Object Model (POM) design pattern.
+A production-ready, enterprise-grade Java Selenium test automation framework built with TestNG, Page Object Model (POM) architecture, and comprehensive Allure reporting with detailed step tracking.
+
+## Overview
+
+This framework provides a solid foundation for automated testing of web applications using Selenium WebDriver 4 with a clean, scalable, and maintainable architecture. It includes professional reporting capabilities, cross-browser support, and comprehensive logging for debugging and test analysis.
 
 ## Project Structure
 
 ```
-saucedemo automation/
+saucedemo-automation/
 ├── src/
-│   ├── main/java/org/example/
-│   │   ├── base/
-│   │   │   └── BasePage.java              # Base class for all page objects
-│   │   ├── driver/
-│   │   │   └── DriverFactory.java         # WebDriver factory and management
-│   │   ├── pages/
-│   │   │   ├── LoginPage.java             # Login page object
-│   │   │   ├── ProductsPage.java          # Products/Inventory page object
-│   │   │   └── CartPage.java              # Shopping cart page object
-│   │   └── utils/
-│   │       ├── ConfigReader.java          # Configuration properties reader
-│   │       ├── WaitUtils.java             # Explicit wait utilities
-│   │       ├── ActionsHelper.java         # Advanced Selenium actions
-│   │       └── ScreenshotUtils.java       # Screenshot capture utilities
-│   └── test/java/org/example/
-│       ├── base/
-│       │   └── BaseTest.java              # Base test class with setup/teardown
-│       ├── tests/
-│       │   ├── LoginTest.java             # Login test cases
-│       │   └── CheckoutTest.java          # Checkout test cases
-│       └── listeners/
-│           └── TestListener.java          # TestNG listener for test events
-├── src/test/resources/
-│   ├── config.properties                  # Configuration properties
-│   └── testng.xml                         # TestNG suite configuration
-└── pom.xml                                 # Maven configuration
-
+│   ├── main/
+│   │   ├── java/org/example/
+│   │   │   ├── base/
+│   │   │   │   └── BasePage.java              # Base class with reusable Selenium actions
+│   │   │   ├── driver/
+│   │   │   │   └── DriverFactory.java         # Thread-safe WebDriver management
+│   │   │   ├── pages/
+│   │   │   │   ├── LoginPage.java             # Login page object with @Step annotations
+│   │   │   │   ├── ProductsPage.java          # Products/Inventory page object
+│   │   │   │   ├── CartPage.java              # Shopping cart page object
+│   │   │   │   └── CheckoutPage.java          # Checkout flow page object
+│   │   │   └── utils/
+│   │   │       ├── ConfigReader.java          # Externalized properties reader
+│   │   │       ├── WaitUtils.java             # Explicit wait utilities
+│   │   │       ├── ActionsHelper.java         # Advanced mouse/keyboard actions
+│   │   │       ├── ScreenshotUtils.java       # Screenshot capture utilities
+│   │   │       └── AllureEnvironmentWriter.java  # Allure environment info writer
+│   │   └── resources/
+│   │       └── log4j2.xml                     # Log4j2 configuration
+│   └── test/
+│       ├── java/org/example/test/
+│       │   ├── base/
+│       │   │   └── BaseTest.java              # Base test class with @BeforeSuite/@AfterMethod
+│       │   ├── tests/
+│       │   │   ├── LoginTest.java             # Login test cases (5 test methods)
+│       │   │   ├── ProductsTest.java          # Products page test cases
+│       │   │   ├── CartTest.java              # Cart functionality test cases
+│       │   │   └── CheckoutTest.java          # End-to-end checkout test cases (6 test methods)
+│       │   └── listeners/
+│       │       └── TestListener.java          # TestNG listener for test event hooks
+│       └── resources/
+│           ├── config.properties              # Test configuration (browser, base URL, credentials)
+│           ├── allure.properties              # Allure configuration
+│           ├── environment.properties         # Allure environment info
+│           └── testng.xml                     # TestNG suite configuration
+├── logs/
+│   └── test-execution.log                     # Test execution logs
+├── screenshots/
+│   └── [failure screenshots]                  # Screenshots captured on test failure
+├── pom.xml                                    # Maven POM with all dependencies
+└── README.md                                  # This file
 ```
 
-## Architecture Overview
+## Current Features
 
-### Design Pattern: Page Object Model (POM)
+### ✅ Page Object Model Architecture
+- **Encapsulation**: Page elements and actions encapsulated in dedicated page classes
+- **Maintainability**: Changes to page elements require updates in only one location
+- **Reusability**: Common actions abstracted in BasePage class
+- **Type Safety**: Uses Selenium's By locators with strong typing
 
-The framework follows the Page Object Model design pattern where:
-- Each page in the application has a corresponding Java class
-- Page elements (locators) are defined as static By objects
-- Page actions are represented as methods
-- Tests interact with pages rather than directly with WebDriver
+### ✅ Allure Reporting Integration
+- **Detailed Steps**: All page object methods annotated with `@Step` for detailed test timelines
+- **Parameter Tracking**: Step parameters automatically captured and displayed
+- **Environment Info**: Browser, OS, Java version, and application URL captured in report
+- **Screenshots on Failure**: Automatically attached to failing test steps
+- **Business-Level Reporting**: Steps written in user-facing business language
 
-### Key Components
+### ✅ WebDriver Management
+- **Cross-Browser Support**: Chrome, Firefox, Edge (with WebDriverManager for automatic driver downloads)
+- **Browser Options**: Pre-configured with stability enhancements (password manager disabled, etc.)
+- **Window Management**: Automatic window maximize on browser launch
 
-#### 1. **DriverFactory** (Driver Management)
-- Singleton pattern for WebDriver management
-- Thread-safe using ThreadLocal
-- Supports multiple browsers: Chrome, Firefox, Edge
-- WebDriverManager integration for automatic driver binary management
-- Methods:
-  - `initializeDriver(String browserType)` - Initialize WebDriver
-  - `getDriver()` - Get current WebDriver instance
-  - `quitDriver()` - Clean up and quit driver
+### ✅ Test Execution & Reporting
+- **TestNG Framework**: Full TestNG support with listeners and event hooks
+- **Test Organization**: Tests grouped by functionality (Login, Products, Cart, Checkout)
+- **Parallel Execution**: Configurable via testng.xml
+- **Screenshot Capture**: Automatic on test failure, stored with timestamps
+- **Comprehensive Logging**: Log4j2 logging to console and file
 
-#### 2. **BasePage** (Page Object Base)
-- Base class for all page objects
-- Contains common interaction methods
-- Initializes PageFactory for element locators
-- Methods:
-  - `click(By by)` - Click on element
-  - `sendKeys(By by, String text)` - Send text to element
-  - `getText(By by)` - Get text from element
-  - `clear(By by)` - Clear text from element
-  - `isElementDisplayed(By by)` - Check element visibility
+### ✅ Utilities & Helpers
+- **ConfigReader**: Centralized property management with default values
+- **WaitUtils**: Explicit waits for reliability (visibility, clickability, presence)
+- **ActionsHelper**: Advanced Selenium actions (hover, right-click, drag-and-drop)
+- **ScreenshotUtils**: Screenshot capture and file management
+- **AllureEnvironmentWriter**: Runtime environment data capture for Allure report
 
-#### 3. **Page Objects**
+### ✅ Professional Code Quality
+- **Separation of Concerns**: Clear boundaries between page objects, utilities, tests, and drivers
+- **DRY Principle**: No code duplication; shared functionality in base classes
+- **Clean Code**: Meaningful naming, single responsibility, minimal complexity
+- **Error Handling**: Graceful exception handling with detailed logging
+- **Documentation**: Comprehensive JavaDoc comments
 
-**LoginPage:**
-- Locators for username field, password field, login button, error message
-- Methods for entering credentials and retrieving messages
 
-**ProductsPage:**
-- Methods for adding products to cart
-- Methods for opening cart
-- Methods for product management
+## Test Suite
 
-**CartPage:**
-- Methods for checkout process
-- Methods for removing items from cart
-- Methods for cart management
+### Test Classes & Coverage
 
-#### 4. **Utilities**
+#### LoginTest (5 test methods)
+- `testValidLogin()` - Valid credentials login flow
+- `testInvalidLogin()` - Invalid credentials error validation
+- `testEmptyUsernameAndPassword()` - Form validation with empty fields
+- `testEmptyUsername()` - Field-level validation
+- `testEmptyPassword()` - Field-level validation
 
-**ConfigReader:**
-- Reads configuration from config.properties
-- Provides centralized property management
-- Supports default values
+#### ProductsTest (3+ test methods)
+- `testAddToCartButtonChangesAndPersists()` - Add to cart button state tracking
+- `testDefaultSortingAToZ()` - Default sort order validation
+- `testSortingZToA()` - Reverse sort validation
+- `testSortingPriceLowToHigh()` - Price ascending sort
+- `testSortingPriceHighToLow()` - Price descending sort
 
-**WaitUtils:**
-- Explicit wait methods for stable element interactions
-- Wait conditions: visibility, clickability, presence, invisibility
-- Configurable wait timeouts
+#### CartTest (1+ test methods)
+- `testAddProductToCart()` - Cart addition flow
 
-**ActionsHelper:**
-- Advanced mouse and keyboard actions
-- Hover, right-click, double-click operations
-- Drag and drop functionality
-- Scroll to element
+#### CheckoutTest (6 test methods)
+- `testCheckoutFlow()` - Complete end-to-end checkout
+- `testEmptyallfields()` - Form validation with all empty fields
+- `testEmptyFirstName()` - Individual field validation
+- `testEmptyLastName()` - Individual field validation
+- `testEmptyZipCode()` - Individual field validation
+- `testCheckoutOverviewDetails()` - Order summary validation with price calculations
+- `testCartEmptyAfterCheckout()` - Post-order state verification
 
-**ScreenshotUtils:**
-- Captures screenshots on test failure
-- Auto-generates filenames with timestamps
-- Organized screenshot storage
-
-#### 5. **BaseTest** (Test Base)
-- @BeforeMethod: setup() - Initialize WebDriver
-- @AfterMethod: teardown() - Clean up resources
-- Centralized test setup and teardown
-
-#### 6. **TestListener** (Test Event Listener)
-- Implements TestNG ITestListener interface
-- Captures actions on test start, success, failure, skip
-- Takes screenshots on test failure automatically
-- Logs comprehensive test execution details
-
-## Technology Stack
-
-- **Language:** Java 17
-- **Test Framework:** TestNG 7.8.1
-- **Selenium:** WebDriver 4.15.0
-- **Build Tool:** Maven 3.x
-- **Driver Management:** WebDriverManager 5.6.3
-- **Logging:** Log4j 2.21.0
-
-## Configuration
-
-### config.properties
-
-Key configuration properties:
-- `browser` - Browser type (chrome, firefox, edge)
-- `base.url` - Application base URL
-- `explicit.wait.timeout` - Explicit wait timeout in seconds
-- `headless.mode` - Run browser in headless mode
-- `screenshot.on.failure` - Enable/disable screenshot on failure
-- Test credentials and data
-
-## Test Execution
-
-### Using Maven
-
-Run all tests:
-```bash
-mvn clean test
-```
-
-Run specific test class:
-```bash
-mvn clean test -Dtest=LoginTest
-```
-
-Run specific test method:
-```bash
-mvn clean test -Dtest=LoginTest#testValidLogin
-```
-
-### Using TestNG XML
-
-The `testng.xml` file in `src/test/resources/` controls test execution:
-- Defines test suites and groups
-- Registers test listeners
-- Controls test execution order and parallelization
-
-## Best Practices Implemented
-
-1. **Separation of Concerns** - Clear separation between page objects, utilities, and tests
-2. **DRY Principle** - Reusable base classes and utility methods
-3. **Page Object Model** - Each page has a dedicated object class
-4. **Thread Safety** - ThreadLocal for WebDriver management
-5. **Configuration Management** - Externalized configuration via properties file
-6. **Logging & Reporting** - Comprehensive test event logging and screenshot capture
-7. **Waits** - Explicit waits instead of implicit waits for reliable test execution
-8. **Clean Code** - Clear naming conventions and comprehensive documentation
-
-## Future Enhancement Points
-
-The skeleton includes placeholders (TODO comments) for implementation in the following areas:
-
-1. **Page Locators** - Add By locators for page elements
-2. **Method Implementations** - Implement page action methods
-3. **Test Cases** - Complete test method implementations
-4. **Configuration** - Configure driver options and browser preferences
-5. **Logging** - Add detailed logging for debugging
-
-## Getting Started
-
-1. Clone/download the project
-2. Update `config.properties` with your application URL and test data
-3. Implement TODO comments in each class
-4. Add page element locators (By objects)
-5. Implement test methods
-6. Run tests using Maven or TestNG
-
-## Notes
-
-- This is a framework skeleton - NO business logic is implemented
-- All methods contain TODO comments and empty bodies for implementation
-- The structure supports easy scaling for adding more test cases and pages
-- Follow the established patterns when adding new pages or tests
-- Ensure all locators are properly managed in their respective page classes
-
-## Author
-
-Senior QA Automation Engineer
-
-## License
-
-Internal Use Only
 

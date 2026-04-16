@@ -56,12 +56,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- FIXED: Allure Java Commons — REQUIRED for test result processing and reporting -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+            <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- AspectJ Weaver — required for Allure annotations (@Step, @Attachment, etc.) -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

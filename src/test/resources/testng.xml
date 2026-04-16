@@ -4,8 +4,10 @@
 
     <!-- Test Listener Configuration -->
     <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
         <listener class-name="org.example.test.listeners.TestListener"/>
     </listeners>
+
 
     <!-- Login Test Group -->
     <test name="Login Tests" preserve-order="true">
