@@ -27,7 +27,6 @@ saucedemo-automation/
 │   │   │       ├── WaitUtils.java             # Explicit wait utilities
 │   │   │       ├── ActionsHelper.java         # Advanced mouse/keyboard actions
 │   │   │       ├── ScreenshotUtils.java       # Screenshot capture utilities
-│   │   │       └── AllureEnvironmentWriter.java  # Allure environment info writer
 │   │   └── resources/
 │   │       └── log4j2.xml                     # Log4j2 configuration
 │   └── test/
@@ -44,7 +43,6 @@ saucedemo-automation/
 │       └── resources/
 │           ├── config.properties              # Test configuration (browser, base URL, credentials)
 │           ├── allure.properties              # Allure configuration
-│           ├── environment.properties         # Allure environment info
 │           └── testng.xml                     # TestNG suite configuration
 ├── logs/
 │   └── test-execution.log                     # Test execution logs
