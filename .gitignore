@@ -13,10 +13,7 @@ target/
 # ========================
 # Allure
 # ========================
-allure-results/
-allure-report/
-allure/
-.allure/
+
 
 # ========================
 # Logs
